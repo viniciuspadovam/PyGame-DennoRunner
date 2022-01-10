@@ -14,7 +14,7 @@ screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption('Pixel Runner')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('assets/fonts/Pixeltype.ttf', 50)
-game_active = False
+game_active = True
 start_time = 0
 score = 0
 
