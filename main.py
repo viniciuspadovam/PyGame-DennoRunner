@@ -7,6 +7,7 @@ screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption('Denno Runner')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('assets/fonts/Pixeltype.ttf', 50)
+game_active = True
 
 sky_surface = pygame.image.load('assets/graphics/sky.png').convert()
 ground_surface = pygame.image.load('assets/graphics/ground.png').convert()
@@ -27,28 +28,40 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.MOUSEBUTTONDOWN and player_rect.bottom == 300:
-            # if player_rect.collidepoint(event.pos): 
-            player_gravity = -20
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and player_rect.bottom == 300:
+        if game_active:
+            if event.type == pygame.MOUSEBUTTONDOWN and player_rect.bottom == 300:
+                # if player_rect.collidepoint(event.pos): 
                 player_gravity = -20
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and player_rect.bottom == 300:
+                    player_gravity = -20
+        else:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game_active = True
+                enemy_rect.left = 805
 
-    screen.blit(sky_surface, (0, 0))
-    screen.blit(ground_surface, (0, 300))
-    pygame.draw.rect(screen, '#c0e8ec', score_rect)
-    pygame.draw.rect(screen, '#c0e8ec', score_rect, 10)
-    screen.blit(score_surface, score_rect)
-    
-    enemy_rect.x -= 3
-    if enemy_rect.left < -100: enemy_rect.left = 805
-    screen.blit(enemy_surface, enemy_rect)
+    if game_active:
+        screen.blit(sky_surface, (0, 0))
+        screen.blit(ground_surface, (0, 300))
+        pygame.draw.rect(screen, '#c0e8ec', score_rect)
+        pygame.draw.rect(screen, '#c0e8ec', score_rect, 10)
+        screen.blit(score_surface, score_rect)
+        
+        enemy_rect.x -= 5
+        if enemy_rect.left < -100: enemy_rect.left = 805
+        screen.blit(enemy_surface, enemy_rect)
 
-    # --- Player ---
-    player_gravity += 1
-    player_rect.y += player_gravity
-    if player_rect.bottom >= 300: player_rect.bottom = 300
-    screen.blit(player_surface, player_rect)
-    
+        # --- Player ---
+        player_gravity += 1
+        player_rect.y += player_gravity
+        if player_rect.bottom >= 300: player_rect.bottom = 300
+        screen.blit(player_surface, player_rect)
+        
+        # --- Collision ---
+        if enemy_rect.colliderect(player_rect):
+            game_active = False
+    else:
+        screen.fill('Yellow')
+
     pygame.display.update()
     clock.tick(60)
