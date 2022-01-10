@@ -1,18 +1,27 @@
 import pygame
-from sys import exit, pycache_prefix
+from sys import exit
 from pygame.constants import K_SPACE
+
+def display_score():
+    current_time = int(pygame.time.get_ticks() / 1000) - start_time
+    score_surface = test_font.render(f'score: {current_time}', False, (64, 64, 64))
+    score_rect = score_surface.get_rect(center = (400, 50))
+    screen.blit(score_surface, score_rect)
+    return current_time
 
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
-pygame.display.set_caption('Denno Runner')
+pygame.display.set_caption('Pixel Runner')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('assets/fonts/Pixeltype.ttf', 50)
-game_active = True
+game_active = False
+start_time = 0
+score = 0
 
 sky_surface = pygame.image.load('assets/graphics/sky.png').convert()
 ground_surface = pygame.image.load('assets/graphics/ground.png').convert()
-score_surface = test_font.render('My game', False, (64, 64, 64))
-score_rect = score_surface.get_rect(midtop = (int(screen.get_width() / 2), 50))
+# score_surface = test_font.render('My game', False, (64, 64, 64))
+# score_rect = score_surface.get_rect(midtop = (int(screen.get_width() / 2), 50))
 
 enemy_surface = pygame.image.load('assets/graphics/enemy.png').convert_alpha()
 enemy_rect = enemy_surface.get_rect(topleft = (600, 250))
@@ -39,13 +48,15 @@ while True:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
                 enemy_rect.left = 805
+                start_time = int(pygame.time.get_ticks() / 1000)
 
     if game_active:
         screen.blit(sky_surface, (0, 0))
         screen.blit(ground_surface, (0, 300))
-        pygame.draw.rect(screen, '#c0e8ec', score_rect)
-        pygame.draw.rect(screen, '#c0e8ec', score_rect, 10)
-        screen.blit(score_surface, score_rect)
+        # pygame.draw.rect(screen, '#c0e8ec', score_rect)
+        # pygame.draw.rect(screen, '#c0e8ec', score_rect, 10)
+        # screen.blit(score_surface, score_rect)
+        display_score()
         
         enemy_rect.x -= 5
         if enemy_rect.left < -100: enemy_rect.left = 805
