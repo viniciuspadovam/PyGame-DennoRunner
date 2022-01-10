@@ -30,6 +30,18 @@ player_surface = pygame.image.load('assets/graphics/player/player_stand.png').co
 player_rect = player_surface.get_rect(midbottom = (80, 300))
 player_gravity = 0
 
+# --- Intro Screen ---
+player_stand = pygame.image.load('assets/graphics/player/player_stand.png').convert_alpha()
+# player_stand = pygame.transform.rotozoom(player_stand, 0, 2)
+player_stand = pygame.transform.scale2x(player_stand)
+player_stand_rect = player_stand.get_rect(center = (400, 200))
+
+name_txt = test_font.render('Pixel Runner', False, (111, 196, 169))
+name_txt_rect = name_txt.get_rect(center = (400, 50))
+
+instruction_txt = test_font.render('Press Space to Start', False, (111, 196, 169))
+instruction_txt_rect = instruction_txt.get_rect(center = (400, 350))
+
 # Draw and update all elementes
 while True:
     # --- EVENT LOOP ---
@@ -56,7 +68,7 @@ while True:
         # pygame.draw.rect(screen, '#c0e8ec', score_rect)
         # pygame.draw.rect(screen, '#c0e8ec', score_rect, 10)
         # screen.blit(score_surface, score_rect)
-        display_score()
+        score = display_score()
         
         enemy_rect.x -= 5
         if enemy_rect.left < -100: enemy_rect.left = 805
@@ -72,7 +84,14 @@ while True:
         if enemy_rect.colliderect(player_rect):
             game_active = False
     else:
-        screen.fill('Yellow')
+        screen.fill((94, 129, 162))
+        screen.blit(name_txt, name_txt_rect)
+        screen.blit(player_stand, player_stand_rect)
+
+        score_txt = test_font.render(f'Your Score: {score}', False, (111, 196, 169))
+        score_txt_rect = score_txt.get_rect(center = (400, 350))
+        if score == 0: screen.blit(instruction_txt, instruction_txt_rect)
+        else: screen.blit(score_txt, score_txt_rect)
 
     pygame.display.update()
     clock.tick(60)
