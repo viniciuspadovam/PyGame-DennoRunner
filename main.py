@@ -1,5 +1,7 @@
 import pygame
-from sys import exit
+from sys import exit, pycache_prefix
+
+from pygame.constants import K_SPACE
 
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
@@ -20,12 +22,16 @@ player_rect = player_surface.get_rect(midbottom = (80, 300))
 
 # Draw and update all elementes
 while True:
+    # --- EVENT LOOP ---
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
         # if event.type == pygame.MOUSEMOTION:
         #     if player_rect.collidepoint(event.pos): print('collision')
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                print('jump')
 
     screen.blit(sky_surface, (0, 0))
     screen.blit(ground_surface, (0, 300))
@@ -38,6 +44,9 @@ while True:
     screen.blit(enemy_surface, enemy_rect)
 
     screen.blit(player_surface, player_rect)
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_SPACE]: print('jump')
 
     # if player_rect.colliderect(enemy_rect):
     #     print('collision')
